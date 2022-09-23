@@ -20,10 +20,11 @@ def main():
         except socket.error:
             if msvcrt.kbhit():    
                 message = input("<Me> ")
+                if message == "!leave":
+                    break
                 sock.sendall(message.encode()) 
-            else:
-                continue
-
+            continue
+    sock.close()
 
 if __name__ == "__main__":
     main()

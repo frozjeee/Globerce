@@ -1,7 +1,7 @@
 from threading import Thread
 import socket
  
-
+# Сервер приходится выключать через termination. Не хотел делать код еще грязнее
 def main():
     HOST = "localhost"
     PORT = 5678
@@ -26,25 +26,21 @@ def main():
             # не смог без потоков
             Thread(target=client_thread, args=(conn, addr, clients)).start()
         except Exception as e:
-                continue
+            continue
     
 # на каждого юзера создаем поток. Ждем сообщения бродкастим
 def client_thread(conn, addr, clients):
-
-    conn.send(b"Welcome to this chatroom!")
+    conn.send(b"Welcome to this chatroom!\nType !leave to leave the chat")
 
     while True:
             try:
                 message = conn.recv(1024)
                 if message:
-                    print(message.decode())
                     message_to_send = "<" + clients[conn] + "> " + message.decode()
                     broadcast(message_to_send, conn, clients)
                 else:
                     remove(conn, clients)
-
             except Exception as e:
-                print(e)
                 continue
 
 
